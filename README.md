@@ -1,46 +1,48 @@
-1. Run SonarQube Docker Container
-    ```
-    docker run \
-        --rm \
-        -e SONAR_HOST_URL="http://${SONARQUBE_URL}" \
-        -e SONAR_SCANNER_OPTS="-Dsonar.projectKey=${YOUR_PROJECT_KEY}" \
-        -e SONAR_TOKEN="myAuthenticationToken" \
-        -v "${YOUR_REPO}:/usr/src" \
-        sonarsource/sonar-scanner-cli
-    ```
-2. Access SonarQube
+# Setup
+Run containers
+```
+docker-compose up -d --build
+```
+
+## PHP
+Install composer libraries
+```    
+docker-compose exec php composer install
+```
+
+## SonarQube
+1. Access SonarQube `http://localhost:9000`
+    User: `admin`
+    Password: `admin`
+2. Update SonarQube password
+3. Create a project manually
+4. Fill fields
+    1. `Project display name`
+    2. `Project key`
+        1. Copy Project Key
+        2. Update file `sonar-project.properties` 
+            - Token in line `sonar.projectKey`
+    3. `Main branch name`  
+        _**Note:**_ default branch is `main`
+5. Click Set Up
+6. Click Analyze your project locally
+7. Define a token name (can be any name)
+8. Set Expires in as `No expiration`
+9. Click `Generate`
+    1. Copy generated token
+    2. Update file `sonar-project.properties` 
+        - Token in line `sonar.login`
+10. Click `Continue`
+11. Select `Other (for JS, TS, Go, Python, PHP, ...)`
+12. Select `Linux`
+
+# Usage
+1. Run PHP tests
     ```    
-    http://localhost:9000
+    docker-compose exec php vendor/bin/phpunit --coverage-clover=tests/coverage/coverage.xml
     ```
-3. Generate new Token
-    1. Admistration > Security > Users
-    2. Click icon in Tokens Column
-    3. Type a name
-    4. Set Expires to `No Expiration`
-    5. Click Generate
-    6. Copy Token
-    7. Update file `sonar-project.properties` line `sonar.login`
-4. Install php dependecies
+2. Run Sonar Scanner
     ```
-    sudo apt install php8.2-pcov
+    docker-compose exec php sonar-scanner
     ```
-5. Install composer libs
-    ```
-    composer install
-    ``` 
-6. Run tests
-    ```
-    vendor/bin/phpunit --coverage-clover=tests/coverage/coverage.xml
-    ```
-7. Install sonar-scanner
-    ```
-    cd /tmp
-    wget -q https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
-    unzip sonar-scanner-cli-4.8.0.2856-linux.zip
-    sudo mv sonar-scanner-4.8.0.2856-linux /var/opt
-    ln -s /var/opt/sonar-scanner-4.8.0.2856-linux/bin/sonar-scanner /usr/local/bin/
-    ```
-8. Run Sonar Scanner
-    ```
-    sonar-scanner
-    ```
+3. Refresh SonarQube
