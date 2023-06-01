@@ -36,6 +36,10 @@ docker-compose exec php composer install
 11. Select `Other (for JS, TS, Go, Python, PHP, ...)`
 12. Select `Linux`
 
+_**Note:**_  
+If changed sonarqube `container_name` or `port` in file `docker-compose.yml`  
+    Update file `sonar-project.properties` line `sonar.host.url`
+
 # Usage
 1. Run PHP tests
     ```    
