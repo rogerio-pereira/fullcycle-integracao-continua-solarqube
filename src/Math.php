@@ -9,7 +9,3 @@ class Math
         return $a + $b;
     }
 }
-
-$math = new Math();
-$sum = $math->sum(10, 5);
-echo $sum."\n";
